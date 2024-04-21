@@ -1,0 +1,25 @@
+:root {
+  --primary-brand-color-lightened-3: #068894;
+  --primary-brand-color-lightened-2: #99e4e5;
+  --primary-brand-color-lightened-1: #5fd8e0;
+  --primary-color: #389e0d;
+  --primary-brand-color-darkened-1: #378f95;
+  --primary-brand-color-darkened-2: #068894;
+  --primary-brand-color-darkened-3: #065e64;
+}
+
+#app {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  position: relative;
+  background-color: var(--primary-brand-color-lightened-1);
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
