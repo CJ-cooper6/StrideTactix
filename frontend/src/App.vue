@@ -54,5 +54,28 @@ import Field from './components/Field.vue'
 
 .top-buttons-panel, .tools-panel {
     padding: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+@media (max-width: 768px) {
+    .board {
+        width: 100%;
+        height: 100vh;
+        position: static;
+        transform: none;
+        top: 0;
+        left: 0;
+    }
+
+    .board-container-wrapper {
+        width: 100%;
+        height: calc(100vh - 120px); /* 减去顶部和底部面板的高度 */
+    }
+
+    .top-buttons-panel, .tools-panel {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 </style>
