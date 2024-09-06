@@ -1,23 +1,45 @@
 <template>
     <div class="board">
         <div class="top-buttons-panel">
-            <button>Start</button>
-            <button>Stop</button>
+            <button @click="clear">全部清除</button>
         </div>
-        <div class="board-container-wrapper">
-            <div class="board-container">
-                <Field />
+        <div
+            class="board-container-wrapper"
+        >
+            <div class="board-container" @dragover="onDragOver" @drop="onDrop">
+                <Field :players="players" @move-player="movePlayer"/>
             </div>
         </div>
         <div class="tools-panel">
-            <button>tool1</button>
-            <button>tool2</button>
+            <Player v-for="color in ['red', 'blue', 'green']" :key="color" :color="color" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import Field from './components/Field.vue'
+import Field from './components/Field.vue';
+import Player from './components/Player.vue';
+import { usePlayers } from './hooks/usePlayers';
+
+
+const { players, addPlayer, movePlayer, clearPlayers } = usePlayers();
+
+const onDragOver = (event: DragEvent) => {
+    event.preventDefault();
+};
+
+const onDrop = (event: DragEvent) => {
+    event.preventDefault();
+    const color = event.dataTransfer?.getData('text/plain') ?? '';
+    const boardRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = event.clientX - boardRect.left;
+    const y = event.clientY - boardRect.top;
+    addPlayer(color, x, y);
+};
+
+const clear = () => {
+    clearPlayers();
+};
 </script>
 
 <style scoped>
@@ -48,8 +70,8 @@ import Field from './components/Field.vue'
 }
 
 .board-container {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
 }
 
 .top-buttons-panel, .tools-panel {
@@ -70,7 +92,7 @@ import Field from './components/Field.vue'
 
     .board-container-wrapper {
         width: 100%;
-        height: calc(100vh - 120px); /* 减去顶部和底部面板的高度 */
+        height: calc(100vh - 120px);
     }
 
     .top-buttons-panel, .tools-panel {

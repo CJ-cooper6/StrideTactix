@@ -1,6 +1,6 @@
 <template>
     <svg
-      id="soccer-field"
+      id="field"
       width="100%" height="100%" viewBox="0 0 770 500"
       preserveAspectRatio="xMidYMid meet"
     >
@@ -27,24 +27,55 @@
       <!-- 点球点 -->
       <circle cx="88" cy="250" r="2" fill="white" />
       <circle cx="682" cy="250" r="2" fill="white" />
+
+      <g id="players">
+      <circle
+        v-for="player in players"
+        :key="player.id"
+        :cx="player.x"
+        :cy="player.y"
+        :r="playerRadius"
+        :fill="player.color"
+        @mousedown="startDrag(player.id, $event)"
+      />
+    </g>
     </svg>
 </template>
-<script setup>
-import { reactive, ref } from "vue";
+<script setup lang="ts">
+import  { type Player } from "../types/player";
 
-const players = ref([
-  { number: 0, color: "red" },
-  { number: 0, color: "blue" },
-  { number: 0, color: "green" },
-]);
-const tools = reactive({ lines: [], texts: [] });
-const selectedTool = ref(null);
-const draggingPlayer = ref(null);
-const newLine = ref(null);
+const props = defineProps({
+  players: {
+    type: Array as () => Player[],
+    default: () => []
+  }
+});
+
+const emit = defineEmits(['movePlayer']);
+const startDrag = (id: number, event: MouseEvent) => {
+  const svg = (event.currentTarget as SVGElement).closest('svg');
+  if (!svg) return;
+
+  const movePlayer = (moveEvent: MouseEvent) => {
+    const rect = svg.getBoundingClientRect();
+    const x = moveEvent.clientX - rect.left;
+    const y = moveEvent.clientY - rect.top;
+    emit('movePlayer', { id, x, y });
+  };
+
+  const stopDrag = () => {
+    document.removeEventListener('mousemove', movePlayer);
+    document.removeEventListener('mouseup', stopDrag);
+  };
+
+  document.addEventListener('mousemove', movePlayer);
+  document.addEventListener('mouseup', stopDrag);
+};
+const playerRadius = 20;
 </script>
 
 <style>
-#soccer-field {
+#field {
   transition: all 0.5s ease;
 }
 .tactic-board {
@@ -52,12 +83,6 @@ const newLine = ref(null);
   width: 800px;
   height: 600px;
   border: 1px solid #000;
-}
-.field {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: green;
 }
 .player {
   position: absolute;
