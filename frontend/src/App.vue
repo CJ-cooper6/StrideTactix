@@ -47,26 +47,19 @@ const clear = () => {
     display: flex;
     flex-direction: column;
     background-color: var(--color-primary-color);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    flex-direction: column;
-    justify-content: center;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    position: relative;
+    margin: auto;
 }
 
 .board-container-wrapper {
-    width: 770px;
-    height: 500px;
+    width: 1050px;
+    height: 680px;
     flex-grow: 1;
-    background-color: var(--primary-brand-color-lightened-3); /* 背景色 */
+    background-color: var(--primary-brand-color-lightened-3);
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 40px;
 }
 
 .board-container {
