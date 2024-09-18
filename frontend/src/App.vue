@@ -31,10 +31,15 @@ const onDragOver = (event: DragEvent) => {
 const onDrop = (event: DragEvent) => {
     event.preventDefault();
     const color = event.dataTransfer?.getData('text/plain') ?? '';
-    const boardRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = event.clientX - boardRect.left;
-    const y = event.clientY - boardRect.top;
-    addPlayer(color, x, y);
+    const svg = document.getElementById('field') as unknown as SVGSVGElement;
+    if (!svg) return;
+
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
+    
+    addPlayer(color, svgPoint.x, svgPoint.y);
 };
 
 const clear = () => {

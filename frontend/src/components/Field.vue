@@ -52,23 +52,25 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['movePlayer']);
+const emit = defineEmits(['move-player']);
 const startDrag = (id: number, event: MouseEvent) => {
   const svg = (event.currentTarget as SVGElement).closest('svg');
   if (!svg) return;
 
   const movePlayer = (moveEvent: MouseEvent) => {
-    const rect = svg.getBoundingClientRect();
-    const x = moveEvent.clientX - rect.left;
-    const y = moveEvent.clientY - rect.top;
-    emit('movePlayer', { id, x, y });
+    const point = svg.createSVGPoint();
+    point.x = moveEvent.clientX;
+    point.y = moveEvent.clientY;
+    const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
+    emit('move-player', { id, x: svgPoint.x, y: svgPoint.y });
   };
 
   const stopDrag = () => {
     document.removeEventListener('mousemove', movePlayer);
     document.removeEventListener('mouseup', stopDrag);
   };
-
+  
+  //开始拖动时，添加 mousemove 和 mouseup 事件的监听器，以便在鼠标移动时更新球员的位置，并在鼠标松开时停止拖动。
   document.addEventListener('mousemove', movePlayer);
   document.addEventListener('mouseup', stopDrag);
 };
