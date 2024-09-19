@@ -1,11 +1,19 @@
 <template>
     <svg
       id="field"
-      width="100%" height="100%" viewBox="0 0 1050 680"
+      width="100%" height="100%" viewBox="0 0 1300 900"
      
       preserveAspectRatio="xMidYMid meet"
     >
-     <!-- 场地元素 -->
+     <!-- 背景一 -->
+     <rect width="1300" height="900" fill="var(--primary-brand-color-lightened-5)" />
+     <!-- 背景二 -->
+     <rect width="1170" height="800" transform="translate(65, 50)" fill="var(--primary-brand-color-lightened-3)" />
+    
+     <!-- 球场 -->
+     <g transform="translate(125, 120)">
+      <!-- 场地元素 -->
+      <rect x="0" y="0" width="1050" height="680" fill="var(--primary-brand-color-lightened-3)" />
       <!-- 白线 -->
       <rect x="0" y="0" width="1050" height="680" fill="none" stroke="white" stroke-width="2" />
       <!-- 中线 -->
@@ -24,16 +32,38 @@
       <!-- 中圈点 -->
       <circle cx="525" cy="340" r="4" fill="white" />
 
-      <!-- 球员 -->
-      <g id="players">
+    </g>
+
+    <!-- 球员 -->
+    <g id="players">
       <circle
         v-for="player in players"
         :key="player.id"
         :cx="player.x"
         :cy="player.y"
-        :r="playerRadius"
+        :r="20"
         :fill="player.color"
         @mousedown="startDrag(player.id, $event)"
+      />
+    </g>
+  
+
+    <!-- 操作按钮 -->
+    <g id="control-buttons" transform="translate(75, 10)"@click="clear">
+      <rect width="100" height="40" rx="5" fill="#2196F3"/>
+      <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle">全部清除</text>
+    </g>
+
+    <!-- 工具面板 -->
+    <g id="tools-panel" transform="translate(65, 850)">
+      <circle
+        v-for="(color, index) in ['red', 'blue', 'green']"
+        :key="color"
+        :cx="40 + index * 50"
+        :cy="20"
+        r="15"
+        :fill="color"
+        @mousedown="startDragNewPlayer('red', $event)"
       />
     </g>
     
@@ -49,8 +79,9 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['move-player']);
+const emit = defineEmits(['move-player', 'add-player', 'clear']);
 const startDrag = (id: number, event: MouseEvent) => {
+  console.log("startDrag");
   const svg = (event.currentTarget as SVGElement).closest('svg');
   if (!svg) return;
 
@@ -59,7 +90,7 @@ const startDrag = (id: number, event: MouseEvent) => {
     point.x = moveEvent.clientX;
     point.y = moveEvent.clientY;
     const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
-    emit('move-player', { id, x: svgPoint.x, y: svgPoint.y });
+    emit('move-player', { id, x: svgPoint.x, y: svgPoint.y});
   };
 
   const stopDrag = () => {
@@ -71,7 +102,25 @@ const startDrag = (id: number, event: MouseEvent) => {
   document.addEventListener('mousemove', movePlayer);
   document.addEventListener('mouseup', stopDrag);
 };
-const playerRadius = 20;
+
+const startDragNewPlayer = (color: string, event: MouseEvent) => {
+  const svg = (event.currentTarget as SVGElement).closest('svg');
+  if (!svg) return;
+
+  const stopDrag = (moveEvent: MouseEvent) => {
+    const point = svg.createSVGPoint();
+    point.x = moveEvent.clientX;
+    point.y = moveEvent.clientY;
+    const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
+    emit('add-player', color, svgPoint.x,  svgPoint.y);
+    document.removeEventListener('mouseup', stopDrag);
+  };
+  document.addEventListener('mouseup', stopDrag);
+};
+
+const clear = () => {
+  emit('clear');
+};
 </script>
 
 <style>

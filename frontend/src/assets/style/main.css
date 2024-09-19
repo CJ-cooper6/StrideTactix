@@ -14,6 +14,7 @@
   margin: 0;
   position: relative;
   background-color: var(--primary-brand-color-lightened-1);
+  overflow: auto;
 }
 
 body, html {
