@@ -5,30 +5,26 @@
      
       preserveAspectRatio="xMidYMid meet"
     >
-    
+     <!-- 场地元素 -->
       <!-- 白线 -->
       <rect x="0" y="0" width="1050" height="680" fill="none" stroke="white" stroke-width="2" />
-      
       <!-- 中线 -->
       <line x1="525" y1="0" x2="525" y2="680" stroke="white" stroke-width="2" />
-      
       <!-- 中圈 -->
       <circle cx="525" cy="340" r="90" fill="none" stroke="white" stroke-width="2" />
-      
       <!-- 球门区 -->
       <rect x="0" y="275" width="55" height="130" fill="none" stroke="white" stroke-width="2" />
       <rect x="995" y="275" width="55" height="130" fill="none" stroke="white" stroke-width="2" />
-      
       <!-- 罚球区 -->
       <rect x="0" y="173" width="162" height="334" fill="none" stroke="white" stroke-width="2" />
       <rect x="888" y="173" width="162" height="334" fill="none" stroke="white" stroke-width="2" />
-      
       <!-- 点球点 -->
       <circle cx="121" cy="340" r="2" fill="white" />
       <circle cx="929" cy="340" r="2" fill="white" />
-
+      <!-- 中圈点 -->
       <circle cx="525" cy="340" r="4" fill="white" />
 
+      <!-- 球员 -->
       <g id="players">
       <circle
         v-for="player in players"
@@ -40,6 +36,7 @@
         @mousedown="startDrag(player.id, $event)"
       />
     </g>
+    
     </svg>
 </template>
 <script setup lang="ts">
