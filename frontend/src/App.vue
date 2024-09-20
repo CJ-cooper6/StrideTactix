@@ -1,14 +1,14 @@
 <template>
   <div class="board">
-    <Field :players="players" @move-player="movePlayer" @add-player="addPlayer" @clear="clearPlayers" class="field" />
+    <Field :items="items" @move-item="moveItem" @add-item="addItem" @clear="clearItems" class="field" />
   </div>
 </template>
 
 <script setup lang="ts">
 import Field from "./components/Field.vue";
-import { usePlayers } from "./hooks/usePlayers";
+import { useItems } from "./hooks/useItems";
 
-const { players, addPlayer, movePlayer, clearPlayers } = usePlayers();
+const { items, addItem, moveItem, clearItems } = useItems();
 </script>
 
 <style scoped>
@@ -18,24 +18,19 @@ const { players, addPlayer, movePlayer, clearPlayers } = usePlayers();
   background-color: var(--color-primary-color);
   position: relative;
   margin: auto;
-
-  .field {
-    width: 1200px;
-    height: 750px;
-  }
+  width: 100%;
+  max-width: 1200px;
 }
 
+.field {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1200 / 750;
+}
 
 @media (max-width: 768px) {
   .board {
-    width: 100%;
-    height: auto;
-  }
-
-  .board .field {
-    max-width: 400px;
-    max-height: 500px;
-    margin: auto;
+    padding: 5px;
   }
 }
 </style>

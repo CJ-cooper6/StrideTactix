@@ -31,22 +31,17 @@
       <circle cx="929" cy="340" r="2" fill="white" />
       <!-- 中圈点 -->
       <circle cx="525" cy="340" r="4" fill="white" />
-
     </g>
 
     <!-- 球员 -->
     <g id="players">
-      <circle
-        v-for="player in players"
-        :key="player.id"
-        :cx="player.x"
-        :cy="player.y"
-        :r="20"
-        :fill="player.color"
-        @mousedown="startDrag(player.id, $event)"
+      <ItemComponent
+      v-for="item in items"
+        :key="item.id"
+        :item="item"
+        @pointerdown="startDrag(item, $event)"
       />
     </g>
-  
 
     <!-- 操作按钮 -->
     <g id="control-buttons" transform="translate(75, 10)"@click="clear">
@@ -56,66 +51,70 @@
 
     <!-- 工具面板 -->
     <g id="tools-panel" transform="translate(65, 850)">
-      <circle
-        v-for="(color, index) in ['red', 'blue', 'green']"
-        :key="color"
-        :cx="40 + index * 50"
-        :cy="20"
-        r="15"
-        :fill="color"
-        @mousedown="startDragNewPlayer('red', $event)"
+      <ItemComponent
+      v-for="item in toolItems"
+        :item="item"
+        @pointerdown="startDragNewItem(item.color, $event)"
       />
     </g>
-    
     </svg>
 </template>
 <script setup lang="ts">
-import  { type Player } from "../types/player";
+import  { type Item } from "../types/item";
+import ItemComponent from "./Item.vue";
 
 const props = defineProps({
-  players: {
-    type: Array as () => Player[],
+  items: {
+    type: Array as () => Item[],
     default: () => []
   }
 });
+const toolItems = [{color: 'red', x: 40, y: 20, r: 15},{color: 'blue', x: 90, y: 20, r: 15},{color: 'green', x: 140, y: 20, r: 15}];
 
-const emit = defineEmits(['move-player', 'add-player', 'clear']);
-const startDrag = (id: number, event: MouseEvent) => {
-  console.log("startDrag");
+const emit = defineEmits(['move-item', 'add-item', 'clear']);
+const startDrag = (item: Item, event: PointerEvent) => {
   const svg = (event.currentTarget as SVGElement).closest('svg');
   if (!svg) return;
 
-  const movePlayer = (moveEvent: MouseEvent) => {
+  const handlemoveItem = (moveEvent: PointerEvent) => {
     const point = svg.createSVGPoint();
     point.x = moveEvent.clientX;
     point.y = moveEvent.clientY;
     const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
-    emit('move-player', { id, x: svgPoint.x, y: svgPoint.y});
+    if (item.id !== undefined) {
+      emit('move-item', { id: item.id, x: svgPoint.x, y: svgPoint.y});
+    }
   };
 
   const stopDrag = () => {
-    document.removeEventListener('mousemove', movePlayer);
-    document.removeEventListener('mouseup', stopDrag);
+    svg.removeEventListener('pointermove', handlemoveItem);
+    svg.removeEventListener('pointerup', stopDrag);
+    svg.removeEventListener('pointercancel', stopDrag);
   };
   
-  //开始拖动时，添加 mousemove 和 mouseup 事件的监听器，以便在鼠标移动时更新球员的位置，并在鼠标松开时停止拖动。
-  document.addEventListener('mousemove', movePlayer);
-  document.addEventListener('mouseup', stopDrag);
+  svg.setPointerCapture(event.pointerId);
+  svg.addEventListener('pointermove', handlemoveItem);
+  svg.addEventListener('pointerup', stopDrag);
+  svg.addEventListener('pointercancel', stopDrag);
 };
 
-const startDragNewPlayer = (color: string, event: MouseEvent) => {
+const startDragNewItem = (color: string, event: PointerEvent) => {
   const svg = (event.currentTarget as SVGElement).closest('svg');
   if (!svg) return;
 
-  const stopDrag = (moveEvent: MouseEvent) => {
+  const stopDrag = (moveEvent: PointerEvent) => {
     const point = svg.createSVGPoint();
     point.x = moveEvent.clientX;
     point.y = moveEvent.clientY;
     const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
-    emit('add-player', color, svgPoint.x,  svgPoint.y);
-    document.removeEventListener('mouseup', stopDrag);
+    emit('add-item', color, svgPoint.x, svgPoint.y);
+    svg.removeEventListener('pointerup', stopDrag);
+    svg.removeEventListener('pointercancel', stopDrag);
   };
-  document.addEventListener('mouseup', stopDrag);
+
+  svg.setPointerCapture(event.pointerId);
+  svg.addEventListener('pointerup', stopDrag);
+  svg.addEventListener('pointercancel', stopDrag);
 };
 
 const clear = () => {
@@ -126,22 +125,6 @@ const clear = () => {
 <style>
 #field {
   transition: all 0.5s ease;
-}
-.player {
-  position: absolute;
-  cursor: pointer;
-}
-.lines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.bottom-tools {
-  display: flex;
-  width: 840px;
-  height: auto;
+  touch-action: none; /* 防止浏览器默认的触摸行为 */
 }
 </style>
