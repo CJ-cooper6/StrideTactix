@@ -1,14 +1,21 @@
 <template>
   <div class="board">
-    <Field :items="items" @move-item="moveItem" @add-item="addItem" @clear="clearItems" class="field" />
+    <Field :items="items" class="field" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { provide } from 'vue';
 import Field from "./components/Field.vue";
 import { useItems } from "./hooks/useItems";
 
 const { items, addItem, moveItem, clearItems } = useItems();
+provide('itemOperations', {
+  addItem,
+  moveItem,
+  clearItems,
+  items
+});
 </script>
 
 <style scoped>

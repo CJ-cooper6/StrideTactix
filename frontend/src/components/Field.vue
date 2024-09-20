@@ -57,77 +57,50 @@
       <rect width="100" height="40" rx="5" fill="#2196F3"/>
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">全部清除</text>
     </g>
-
+    
     <!-- 工具面板 -->
     <g id="tools-panel" transform="translate(75, 830)">
-      <ItemComponent
-      v-for="item in toolItems"
-        :item="item"
-        @pointerdown="startDragNewItem(item.color, $event)"
-      />
-    </g>
+    <ToolsPanel />
+  </g>
     </svg>
 </template>
 <script setup lang="ts">
-import  { type Item } from "../types/item";
+import { inject } from 'vue';
 import ItemComponent from "./Item.vue";
+import ToolsPanel from "./ToolsPanel.vue";
+import type { Item } from '@/types/item';
 
-const props = defineProps({
-  items: {
-    type: Array as () => Item[],
-    default: () => []
-  }
-});
-const toolItems = [{color: 'red', x: 40, y: 20, r: 15},{color: 'blue', x: 90, y: 20, r: 15},{color: 'green', x: 140, y: 20, r: 15}];
+// @ts-ignore
+const { items, moveItem, clearItems } = inject('itemOperations');
 
-const emit = defineEmits(['move-item', 'add-item', 'clear']);
 const startDrag = (item: Item, event: PointerEvent) => {
   const svg = (event.currentTarget as SVGElement).closest('svg');
   if (!svg) return;
 
-  const handlemoveItem = (moveEvent: PointerEvent) => {
+  const handleMoveItem = (moveEvent: PointerEvent) => {
     const point = svg.createSVGPoint();
     point.x = moveEvent.clientX;
     point.y = moveEvent.clientY;
     const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
     if (item.id !== undefined) {
-      emit('move-item', { id: item.id, x: svgPoint.x, y: svgPoint.y});
+      moveItem({ id: item.id, x: svgPoint.x, y: svgPoint.y });
     }
   };
 
   const stopDrag = () => {
-    svg.removeEventListener('pointermove', handlemoveItem);
+    svg.removeEventListener('pointermove', handleMoveItem);
     svg.removeEventListener('pointerup', stopDrag);
     svg.removeEventListener('pointercancel', stopDrag);
   };
   
   svg.setPointerCapture(event.pointerId);
-  svg.addEventListener('pointermove', handlemoveItem);
-  svg.addEventListener('pointerup', stopDrag);
-  svg.addEventListener('pointercancel', stopDrag);
-};
-
-const startDragNewItem = (color: string, event: PointerEvent) => {
-  const svg = (event.currentTarget as SVGElement).closest('svg');
-  if (!svg) return;
-
-  const stopDrag = (moveEvent: PointerEvent) => {
-    const point = svg.createSVGPoint();
-    point.x = moveEvent.clientX;
-    point.y = moveEvent.clientY;
-    const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
-    emit('add-item', color, svgPoint.x, svgPoint.y);
-    svg.removeEventListener('pointerup', stopDrag);
-    svg.removeEventListener('pointercancel', stopDrag);
-  };
-
-  svg.setPointerCapture(event.pointerId);
+  svg.addEventListener('pointermove', handleMoveItem);
   svg.addEventListener('pointerup', stopDrag);
   svg.addEventListener('pointercancel', stopDrag);
 };
 
 const clear = () => {
-  emit('clear');
+  clearItems();
 };
 </script>
 

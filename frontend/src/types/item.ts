@@ -6,4 +6,5 @@ export interface Item {
     r: number;
     type?: string; // 类型
     shape?: string; // 形状
+    text?: string;
 }
