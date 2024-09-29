@@ -9,12 +9,15 @@ import { provide } from 'vue';
 import Field from "./components/Field.vue";
 import { useItems } from "./hooks/useItems";
 
-const { items, addItem, moveItem, clearItems } = useItems();
+const { items, addItem, moveItem, clearItems, draggingItem, setDraggingItem, removeDraggingItem } = useItems();
 provide('itemOperations', {
   addItem,
   moveItem,
   clearItems,
-  items
+  items,
+  draggingItem,
+  setDraggingItem,
+  removeDraggingItem
 });
 </script>
 

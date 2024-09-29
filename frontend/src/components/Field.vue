@@ -61,16 +61,23 @@
       <rect width="100" height="40" rx="5" fill="#2196F3"/>
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">全部清除</text>
     </g>
-    
-    <!-- 工具面板 -->
-    <g id="tools-panel" transform="translate(75, 830)">
-    <ToolsPanel />
-  </g>
-
     <!-- 截图按钮 -->
     <g id="screenshot-button" transform="translate(175, 10)" @click="captureScreenshot">
       <rect width="100" height="40" rx="5" fill="#4CAF50"/>
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">截图</text>
+    </g>
+    
+    <!-- 工具面板 -->
+    <g id="tools-panel" transform="translate(75, 830)">
+    <ToolsPanel />
+    </g>
+
+    <!-- 正在移动的元素 -->
+    <g id="tools-panel">
+      <ItemComponent
+        v-if="draggingItem"
+        :item="draggingItem"
+      />
     </g>
     </svg>
 </template>
@@ -82,7 +89,7 @@ import ToolsPanel from "./ToolsPanel.vue";
 import type { Item } from '@/types/item';
 
 // @ts-ignore
-const { items, moveItem, clearItems } = inject('itemOperations');
+const { items, moveItem, clearItems, draggingItem } = inject('itemOperations');
 
 const startDrag = (item: Item, event: PointerEvent) => {
   const svg = (event.currentTarget as SVGElement).closest('svg');
@@ -184,14 +191,10 @@ const captureScreenshot = () => {
 <style>
 #field {
   transition: all 0.5s ease;
-  touch-action: none; /* 防止浏览器默认的触摸行为 */
+  touch-action: none;
 
   .no-select {
     user-select: none;
   }
 }
-
-/* #field path {
-  fill: #72A653 !important;
-} */
 </style>
