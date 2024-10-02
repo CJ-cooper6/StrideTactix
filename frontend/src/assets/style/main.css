@@ -11,7 +11,7 @@
   margin: 0;
   position: relative;
   background: var(--primary-brand-color-lightened-3);
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 body, html {
@@ -19,5 +19,6 @@ body, html {
   padding: 0;
   font-family: 'Roboto', sans-serif;
   height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: scroll;
 }

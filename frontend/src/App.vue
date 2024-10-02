@@ -38,4 +38,17 @@ provide('itemOperations', {
   aspect-ratio: 1150 / 900;
 }
 
+@media (max-width: 768px) {
+  .board {
+    padding: 0;
+    touch-action: none;
+  }
+}
+
+@media (max-height: 500px){
+  .board {
+    width: 50%;
+    touch-action: none;
+  }
+}
 </style>

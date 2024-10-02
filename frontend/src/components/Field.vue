@@ -67,9 +67,13 @@
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">截图</text>
     </g>
     <!-- 全屏按钮 -->
-    <g id="fullscreen-button" transform="translate(270, 10)" @click="toggleFullscreen">
+    <g id="fullscreen-button" transform="translate(270, 10)" @click="fullscreen" v-if="!isFullscreen">
       <rect width="100" height="40" rx="5" fill="#4CAF50"/>
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">全屏</text>
+    </g>
+    <g id="exit-fullscreen-button" transform="translate(270, 10)" @click="exitFullscreen" v-if="isFullscreen">
+      <rect width="100" height="40" rx="5" fill="#4CAF50"/>
+      <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">退出全屏</text>
     </g>
     
     <!-- 工具面板 -->
@@ -194,24 +198,35 @@ const captureScreenshot = () => {
   };
   img.src = url;
 };
+const fullscreen = () => {
+  const de = document.documentElement;
+  if (de.requestFullscreen) {
+    de.requestFullscreen();
+  } else if (de.mozRequestFullScreen) {
+    de.mozRequestFullScreen();
+  } else if (de.webkitRequestFullScreen) {
+    de.webkitRequestFullScreen();
+  }
+  isFullscreen.value = true;
+}
 
-const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
-          isFullscreen.value = true;
-        } else {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-            isFullscreen.value = false;
-          }
-        }
-      }
+function exitFullscreen() {
+  var de = document;
+  if (de.exitFullscreen) {
+    de.exitFullscreen();
+  } else if (de.mozCancelFullScreen) {
+  de.mozCancelFullScreen();
+  } else if (de.webkitCancelFullScreen) {
+    de.webkitCancelFullScreen();
+  }
+  isFullscreen.value = false;
+}
+
 </script>
 
 <style>
 #field {
   transition: all 0.5s ease;
-  touch-action: none;
 
   .no-select {
     user-select: none;
