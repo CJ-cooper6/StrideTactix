@@ -66,6 +66,11 @@
       <rect width="100" height="40" rx="5" fill="#4CAF50"/>
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">截图</text>
     </g>
+    <!-- 全屏按钮 -->
+    <g id="fullscreen-button" transform="translate(270, 10)" @click="toggleFullscreen">
+      <rect width="100" height="40" rx="5" fill="#4CAF50"/>
+      <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">全屏</text>
+    </g>
     
     <!-- 工具面板 -->
     <g id="tools-panel" transform="translate(50, 830)">
@@ -82,14 +87,14 @@
     </svg>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
-import { inject } from 'vue';
+import { ref, inject } from 'vue';
 import ItemComponent from "./Item.vue";
 import ToolsPanel from "./ToolsPanel.vue";
 import type { Item } from '@/types/item';
 
 // @ts-ignore
 const { items, moveItem, clearItems, draggingItem } = inject('itemOperations');
+const isFullscreen = ref(false);
 
 const startDrag = (item: Item, event: PointerEvent) => {
   const svg = (event.currentTarget as SVGElement).closest('svg');
@@ -189,6 +194,18 @@ const captureScreenshot = () => {
   };
   img.src = url;
 };
+
+const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+          isFullscreen.value = true;
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+            isFullscreen.value = false;
+          }
+        }
+      }
 </script>
 
 <style>
