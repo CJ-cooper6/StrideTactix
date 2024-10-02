@@ -180,7 +180,10 @@ const captureScreenshot = () => {
       const link = document.createElement('a');
       link.download = 'field-screenshot.png';
       link.href = pngUrl;
+      link.style.display = 'none';
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
     }
     URL.revokeObjectURL(url);
   };
