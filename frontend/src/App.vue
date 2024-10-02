@@ -47,7 +47,7 @@ provide('itemOperations', {
 
 @media (max-height: 500px){
   .board {
-    width: 50%;
+    width: 65%;
     touch-action: none;
   }
 }

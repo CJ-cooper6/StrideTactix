@@ -94,8 +94,8 @@
 import { ref, inject } from 'vue';
 import ItemComponent from "./Item.vue";
 import ToolsPanel from "./ToolsPanel.vue";
-import type { Item } from '@/types/item';
-
+import type { Item } from '../types/item';
+import { clampPosition } from '../utils';
 // @ts-ignore
 const { items, moveItem, clearItems, draggingItem } = inject('itemOperations');
 const isFullscreen = ref(false);
@@ -109,8 +109,9 @@ const startDrag = (item: Item, event: PointerEvent) => {
     point.x = moveEvent.clientX;
     point.y = moveEvent.clientY;
     const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
+    const { x, y } = clampPosition(svgPoint.x, svgPoint.y);
     if (item.id !== undefined) {
-      moveItem({ id: item.id, x: svgPoint.x, y: svgPoint.y });
+      moveItem({ id: item.id, x, y });
     }
   };
 
@@ -210,8 +211,8 @@ const fullscreen = () => {
   isFullscreen.value = true;
 }
 
-function exitFullscreen() {
-  var de = document;
+const exitFullscreen = () => {
+  const de = document;
   if (de.exitFullscreen) {
     de.exitFullscreen();
   } else if (de.mozCancelFullScreen) {

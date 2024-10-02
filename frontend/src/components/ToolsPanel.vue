@@ -10,7 +10,7 @@
 import { inject } from 'vue';
 import { GAME_CONSTANTS } from "../constants";
 import ItemComponent from "./Item.vue";
-
+import { isInsideField } from "../utils";
 
 // @ts-ignore
 const { addItem, draggingItem, removeDraggingItem, setDraggingItem} = inject("itemOperations");
@@ -32,7 +32,8 @@ const startDragNewItem = (color: string, event: PointerEvent) => {
     const point = svg.createSVGPoint();
     point.x = moveEvent.clientX;
     point.y = moveEvent.clientY;
-    return point.matrixTransform(svg.getScreenCTM()?.inverse());
+    const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
+    return { x: svgPoint.x, y: svgPoint.y };
   };
 
   const svgPoint = getTransformedPoint(event);
@@ -44,8 +45,10 @@ const startDragNewItem = (color: string, event: PointerEvent) => {
   });
 
   const stopDrag = (moveEvent: PointerEvent) => {
-    const svgPoint = getTransformedPoint(moveEvent);
-    addItem(color, svgPoint.x, svgPoint.y);
+    const { x, y } = getTransformedPoint(moveEvent);
+    if (isInsideField(x,y)) {
+      addItem(color, x, y);
+    }
     removeDraggingItem();
     svg.removeEventListener('pointerup', stopDrag);
     svg.removeEventListener('pointercancel', stopDrag);
@@ -53,9 +56,9 @@ const startDragNewItem = (color: string, event: PointerEvent) => {
 
   const moveDrag = (moveEvent: PointerEvent) => {
     if (draggingItem.value) {
-      const svgPoint = getTransformedPoint(moveEvent);
-      draggingItem.value.x = svgPoint.x;
-      draggingItem.value.y = svgPoint.y;
+      const { x, y } = getTransformedPoint(moveEvent);
+      draggingItem.value.x = x;
+      draggingItem.value.y = y;
     }
   };
 
