@@ -35,12 +35,7 @@ provide('itemOperations', {
 .field {
   width: 100%;
   height: auto;
-  aspect-ratio: 1200 / 750;
+  aspect-ratio: 1150 / 900;
 }
 
-@media (max-width: 768px) {
-  .board {
-    padding: 5px;
-  }
-}
 </style>

@@ -16,9 +16,9 @@ import ItemComponent from "./Item.vue";
 const { addItem, draggingItem, removeDraggingItem, setDraggingItem} = inject("itemOperations");
 
 const toolItems = [
-  {color: 'red', x: 40, y: 20, r: GAME_CONSTANTS.DefaultItemRadius},
-  {color: 'blue', x: 90, y: 20, r: GAME_CONSTANTS.DefaultItemRadius},
-  {color: 'yellow', x: 140, y: 20, r: GAME_CONSTANTS.DefaultItemRadius}
+  {color: 'red', x: 10, y: 20, r: GAME_CONSTANTS.DefaultItemRadius},
+  {color: 'blue', x: 60, y: 20, r: GAME_CONSTANTS.DefaultItemRadius},
+  {color: 'yellow', x: 110, y: 20, r: GAME_CONSTANTS.DefaultItemRadius}
 ];
 
 

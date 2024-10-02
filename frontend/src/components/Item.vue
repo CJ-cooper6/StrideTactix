@@ -16,3 +16,9 @@ const props = defineProps({
   },
 });
 </script>
+
+<style scoped>
+circle {
+  cursor: pointer;
+}
+</style>

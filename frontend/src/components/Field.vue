@@ -2,19 +2,19 @@
     <svg
       ref="svgRef"
       id="field"
-      width="100%" height="100%" viewBox="0 0 1300 900"
+      width="100%" height="100%" viewBox="0 0 1150 900"
      
       preserveAspectRatio="xMidYMid meet"
     >
     <!-- 背景一 -->
-    <rect width="1280" height="880" fill="none" />
+    <rect width="1150" height="880" fill="none" />
 
     <g id="capture-area">
       <!-- 背景二 -->
-      <rect width="1150" height="780" transform="translate(65, 50)" fill="var(--primary-brand-color-lightened-2)" />
+      <rect width="1150" height="780" transform="translate(0, 50)" fill="var(--primary-brand-color-lightened-2)" />
       
       <!-- 球场 -->
-      <g transform="translate(115, 100)">
+      <g transform="translate(50, 100)">
         <!-- 场地元素 -->
         <rect x="0" y="0" width="1050" height="680" fill="var(--primary-color)" />
         <!-- 草坪纹理 -->
@@ -57,18 +57,18 @@
   </g>
 
     <!-- 操作按钮 -->
-    <g id="control-buttons" transform="translate(65, 10)"@click="clear">
+    <g id="control-buttons" transform="translate(50, 10)"@click="clear">
       <rect width="100" height="40" rx="5" fill="#2196F3"/>
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">全部清除</text>
     </g>
     <!-- 截图按钮 -->
-    <g id="screenshot-button" transform="translate(175, 10)" @click="captureScreenshot">
+    <g id="screenshot-button" transform="translate(160, 10)" @click="captureScreenshot">
       <rect width="100" height="40" rx="5" fill="#4CAF50"/>
       <text x="50" y="25" text-anchor="middle" fill="white" dominant-baseline="middle" class="no-select">截图</text>
     </g>
     
     <!-- 工具面板 -->
-    <g id="tools-panel" transform="translate(75, 830)">
+    <g id="tools-panel" transform="translate(50, 830)">
     <ToolsPanel />
     </g>
 

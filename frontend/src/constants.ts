@@ -1,3 +1,3 @@
 export const GAME_CONSTANTS = {
-    DefaultItemRadius: 18,  // 默认半径
+    DefaultItemRadius: 20,  // 默认半径
 };
